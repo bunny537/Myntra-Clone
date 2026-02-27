@@ -24,7 +24,9 @@ export default function Checkout() {
       if (!user) return;
       try {
         setIsLoadingBag(true);
-        const res = await axios.get(`http://172.16.152.188:5000/bag/${user._id}`);
+        const res = await axios.get(
+          `https://myntra-clone-7wvc.onrender.com/bag/${user._id}`,
+        );
         setBag(res.data || []);
       } catch (err) {
         console.log(err);
@@ -40,20 +42,24 @@ export default function Checkout() {
       return;
     }
     try {
-      await axios.post(`http://172.16.152.188:5000/order/create/${user._id}`, {
-        shippingAddress: "123 Main Street, Apt 4B, New York, NY, 10001",
-        paymentMethod: "Card",
-      });
+      await axios.post(
+        `https://myntra-clone-7wvc.onrender.com/order/create/${user._id}`,
+        {
+          shippingAddress: "123 Main Street, Apt 4B, New York, NY, 10001",
+          paymentMethod: "Card",
+        },
+      );
       router.push("/orders");
     } catch (error) {
       console.log(error);
     }
   };
-  const subtotal = bag?.reduce((s: number, item: any) => {
-    const price = item.productId?.price ?? 0;
-    const qty = item.quantity ?? 1;
-    return s + price * qty;
-  }, 0) ?? 0;
+  const subtotal =
+    bag?.reduce((s: number, item: any) => {
+      const price = item.productId?.price ?? 0;
+      const qty = item.quantity ?? 1;
+      return s + price * qty;
+    }, 0) ?? 0;
   const shipping = subtotal > 2000 ? 0 : 99;
   const tax = Math.round(subtotal * 0.05);
   const total = subtotal + shipping + tax;
